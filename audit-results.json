@@ -1,0 +1,330 @@
+[
+  {
+    "name": "Login page renders",
+    "ok": true
+  },
+  {
+    "name": "Invalid credentials shows error",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "Valid admin login",
+    "ok": true,
+    "detail": "landed /"
+  },
+  {
+    "name": "/ dashboard content",
+    "ok": true,
+    "detail": "matched \"Total\"",
+    "errs": []
+  },
+  {
+    "name": "/ renders (no crash/blank)",
+    "ok": true,
+    "detail": "",
+    "errs": []
+  },
+  {
+    "name": "/leads renders (no crash/blank)",
+    "ok": true,
+    "detail": "",
+    "errs": []
+  },
+  {
+    "name": "/leads Leads content",
+    "ok": true,
+    "detail": "matched \"Leads\"",
+    "errs": []
+  },
+  {
+    "name": "/survey renders (no crash/blank)",
+    "ok": true,
+    "detail": "",
+    "errs": []
+  },
+  {
+    "name": "/survey Site Survey content",
+    "ok": true,
+    "detail": "matched \"Survey\"",
+    "errs": []
+  },
+  {
+    "name": "/quotations renders (no crash/blank)",
+    "ok": true,
+    "detail": "",
+    "errs": []
+  },
+  {
+    "name": "/quotations Quotations content",
+    "ok": true,
+    "detail": "matched \"Quotation\"",
+    "errs": []
+  },
+  {
+    "name": "/installations renders (no crash/blank)",
+    "ok": true,
+    "detail": "",
+    "errs": []
+  },
+  {
+    "name": "/installations Installations content",
+    "ok": true,
+    "detail": "matched \"Installation\"",
+    "errs": []
+  },
+  {
+    "name": "/inventory renders (no crash/blank)",
+    "ok": true,
+    "detail": "",
+    "errs": []
+  },
+  {
+    "name": "/inventory Inventory content",
+    "ok": true,
+    "detail": "matched \"Inventory\"",
+    "errs": []
+  },
+  {
+    "name": "/payments renders (no crash/blank)",
+    "ok": true,
+    "detail": "",
+    "errs": []
+  },
+  {
+    "name": "/payments Payments content",
+    "ok": true,
+    "detail": "matched \"Payment\"",
+    "errs": []
+  },
+  {
+    "name": "/service renders (no crash/blank)",
+    "ok": true,
+    "detail": "",
+    "errs": []
+  },
+  {
+    "name": "/service Service & AMC content",
+    "ok": true,
+    "detail": "matched \"Service\"",
+    "errs": []
+  },
+  {
+    "name": "/employees renders (no crash/blank)",
+    "ok": true,
+    "detail": "",
+    "errs": []
+  },
+  {
+    "name": "/employees Employees content",
+    "ok": true,
+    "detail": "matched \"Employee\"",
+    "errs": []
+  },
+  {
+    "name": "/regions renders (no crash/blank)",
+    "ok": true,
+    "detail": "",
+    "errs": []
+  },
+  {
+    "name": "/regions Regions content",
+    "ok": true,
+    "detail": "matched \"Region\"",
+    "errs": []
+  },
+  {
+    "name": "/feedback renders (no crash/blank)",
+    "ok": true,
+    "detail": "",
+    "errs": []
+  },
+  {
+    "name": "/feedback Feedback content",
+    "ok": true,
+    "detail": "matched \"Feedback\"",
+    "errs": []
+  },
+  {
+    "name": "/blog renders (no crash/blank)",
+    "ok": true,
+    "detail": "",
+    "errs": []
+  },
+  {
+    "name": "/blog Blog content",
+    "ok": true,
+    "detail": "matched \"Blog\"",
+    "errs": []
+  },
+  {
+    "name": "/admin-panel renders (no crash/blank)",
+    "ok": true,
+    "detail": "",
+    "errs": []
+  },
+  {
+    "name": "/admin-panel Admin Panel content",
+    "ok": true,
+    "detail": "matched \"Projects\"",
+    "errs": []
+  },
+  {
+    "name": "/tasks renders (no crash/blank)",
+    "ok": true,
+    "detail": "",
+    "errs": []
+  },
+  {
+    "name": "/tasks Tasks content",
+    "ok": true,
+    "detail": "matched \"Task\"",
+    "errs": []
+  },
+  {
+    "name": "/analytics renders (no crash/blank)",
+    "ok": true,
+    "detail": "",
+    "errs": []
+  },
+  {
+    "name": "/analytics Analytics content",
+    "ok": true,
+    "detail": "matched \"Analytics\"",
+    "errs": []
+  },
+  {
+    "name": "/customers renders (no crash/blank)",
+    "ok": true,
+    "detail": "",
+    "errs": []
+  },
+  {
+    "name": "/customers Customers content",
+    "ok": true,
+    "detail": "matched \"Customer\"",
+    "errs": []
+  },
+  {
+    "name": "/templates renders (no crash/blank)",
+    "ok": true,
+    "detail": "",
+    "errs": []
+  },
+  {
+    "name": "/templates Templates content",
+    "ok": true,
+    "detail": "matched \"Template\"",
+    "errs": []
+  },
+  {
+    "name": "/audit-logs renders (no crash/blank)",
+    "ok": true,
+    "detail": "",
+    "errs": []
+  },
+  {
+    "name": "/audit-logs Audit Logs content",
+    "ok": true,
+    "detail": "matched \"Audit\"",
+    "errs": []
+  },
+  {
+    "name": "Lead detail opens",
+    "ok": true
+  },
+  {
+    "name": "New Lead dialog opens",
+    "ok": true
+  },
+  {
+    "name": "Lead search filter works",
+    "ok": true,
+    "detail": "input accepted, no crash"
+  },
+  {
+    "name": "New Quotation dialog opens",
+    "ok": true
+  },
+  {
+    "name": "Site Survey tabs present",
+    "ok": true,
+    "detail": "2 tabs"
+  },
+  {
+    "name": "Survey tab switch works",
+    "ok": true
+  },
+  {
+    "name": "Payments tabs present",
+    "ok": true,
+    "detail": "3 tabs"
+  },
+  {
+    "name": "Payments tab switch works",
+    "ok": true
+  },
+  {
+    "name": "Inventory stock data visible",
+    "ok": true
+  },
+  {
+    "name": "Employees list loads",
+    "ok": true
+  },
+  {
+    "name": "Admin Panel tabs",
+    "ok": true,
+    "detail": "11 tabs"
+  },
+  {
+    "name": "Admin tab switch works",
+    "ok": true
+  },
+  {
+    "name": "Tasks page content",
+    "ok": true
+  },
+  {
+    "name": "Analytics charts render",
+    "ok": false,
+    "detail": "0 chart svgs"
+  },
+  {
+    "name": "Dashboard charts render",
+    "ok": true,
+    "detail": "4 chart svgs"
+  },
+  {
+    "name": "Region filter opens",
+    "ok": false,
+    "detail": "button not found"
+  },
+  {
+    "name": "Notifications opens",
+    "ok": true
+  },
+  {
+    "name": "Profile menu opens",
+    "ok": false,
+    "detail": "not clickable"
+  },
+  {
+    "name": "Mobile viewport renders + nav toggle",
+    "ok": true
+  },
+  {
+    "name": "Portal login renders",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "Logout works",
+    "ok": false,
+    "detail": "TimeoutError: locator.click: Timeout 3000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('button'"
+  },
+  {
+    "name": "Admin can access /audit-logs",
+    "ok": true
+  }
+]

@@ -1,0 +1,8 @@
+{
+  "name": "Solar CRM",
+  "description": "A comprehensive role-based and region-based CRM for solar energy companies.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

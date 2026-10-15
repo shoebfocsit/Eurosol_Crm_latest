@@ -1,0 +1,16 @@
+{
+  "name": "Eurosol Solar CRM",
+  "short_name": "Eurosol CRM",
+  "description": "Eurosol Solar CRM - Manage leads, surveys, quotations, installations, inventory, payments and more",
+  "theme_color": "#ea580c",
+  "background_color": "#f8fafc",
+  "display": "standalone",
+  "display_override": ["window-controls-overlay"],
+  "orientation": "portrait-primary",
+  "start_url": "/",
+  "scope": "/",
+  "categories": ["business", "productivity"],
+  "icons": [
+    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}
