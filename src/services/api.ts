@@ -473,7 +473,7 @@ export const feedbackApi = {
   getCount: () => api.get('/feedback/count'),
 };
 
-// --- Advanced CRM Endpoints (Tasks, Customers 360, Warranty, Referrals, Expenses, Invoices, Templates, Audit, Branches, Exports) ---
+// --- Advanced CRM Endpoints (Tasks, Customers 360, Expenses, Invoices, Audit, Branches, Exports) ---
 export const tasksApi = {
   getAll: (params?: any) => api.get('/tasks', { params }),
   create: (data: any) => api.post('/tasks', data),
@@ -520,21 +520,6 @@ export const documentsApi = {
   delete: (id: string) => api.delete(`/documents/${id}`),
 };
 
-export const warrantiesApi = {
-  getAll: (params?: any) => api.get('/warranties', { params }),
-  getExpiring: () => api.get('/warranties/expiring'),
-  create: (data: any) => api.post('/warranties', data),
-  update: (id: string, data: any) => api.patch(`/warranties/${id}`, data),
-  delete: (id: string) => api.delete(`/warranties/${id}`),
-};
-
-export const referralsApi = {
-  getAll: (params?: any) => api.get('/referrals', { params }),
-  create: (data: any) => api.post('/referrals', data),
-  update: (id: string, data: any) => api.patch(`/referrals/${id}`, data),
-  delete: (id: string) => api.delete(`/referrals/${id}`),
-};
-
 export const expensesApi = {
   getAll: (params?: any) => api.get('/expenses', { params }),
   getStats: () => api.get('/expenses/stats'),
@@ -560,21 +545,6 @@ export const growthAnalyticsApi = {
   getLeadScores: (params?: { regionId?: string }) => api.get('/analytics/lead-score', { params }),
   getEngineerPerformance: (params?: { regionId?: string }) => api.get('/analytics/engineer-performance', { params }),
   getForecast: (params?: { regionId?: string }) => api.get('/analytics/forecast', { params }),
-};
-
-export const templatesApi = {
-  getAll: (params?: any) => api.get('/templates', { params }),
-  create: (data: any) => api.post('/templates', data),
-  update: (id: string, data: any) => api.patch(`/templates/${id}`, data),
-  delete: (id: string) => api.delete(`/templates/${id}`),
-};
-
-export const deliveryApi = {
-  // LIVE: /notifications/send-* is ADMIN-only (403 for SALES/ENGINEER/MANAGER). Callers should gate
-  // with hasPermission('notifications','create') / isSuperAdmin and fall back to client share/mailto.
-  sendEmail: (data: any) => api.post('/notifications/send-email', data),
-  sendWhatsApp: (data: any) => api.post('/notifications/send-whatsapp', data),
-  getLogs: (params?: any) => api.get('/notifications/logs', { params }),
 };
 
 export const auditApi = {
