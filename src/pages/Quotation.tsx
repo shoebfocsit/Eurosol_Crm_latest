@@ -432,17 +432,29 @@ const Quotation: React.FC = () => {
     }
   };
 
+  // Richest available quotation data for the PDF: the list row first (so we
+  // never block on a network hiccup), then reconciled against GET /quotations/:id
+  // which carries the nested lead (phone/email/address). Falls back to the row.
+  const getQuotationForPdf = async (id: string) => {
+    const row = quotations.find((x: any) => x.id === id);
+    try {
+      const detail = await loadQuotation(id);
+      return detail?.id ? { ...(row || {}), ...detail } : row;
+    } catch {
+      return row;
+    }
+  };
+
+  // PDF is generated client-side (jsPDF) so it can be branded and information
+  // dense — the backend template cannot be restyled from here. Lazily imported
+  // so the (large) jsPDF vendor chunk only loads when actually downloading.
   const handleDownloadPdf = async (id: string) => {
     try {
-      const res = await quotationsApi.downloadPdf(id);
-      const blob = res.data;
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `quotation-${id.slice(0, 8)}.pdf`;
-      a.click();
-      window.URL.revokeObjectURL(url);
-      toast.success('PDF downloaded successfully!');
+      const q = await getQuotationForPdf(id);
+      if (!q) { toast.error('Quotation not found'); return; }
+      const { downloadQuotationPdf } = await import('@/lib/quotationPdf');
+      downloadQuotationPdf(q);
+      toast.success('Quotation PDF downloaded!');
     } catch (err: any) {
       toast.error(err?.response?.data?.message || err?.message || 'Failed to generate PDF');
     }
@@ -462,17 +474,15 @@ const Quotation: React.FC = () => {
       const qShort = (q.id || '').substring(0, 8).toUpperCase();
       const pdfUrl = `${getAbsoluteApiBaseUrl()}/quotations/${id}/download`;
 
-      // 1) Download PDF blob authenticated (so we can actually attach it — wa.me text alone cannot attach files)
+      // 1) Build the PDF client-side so we can actually attach it — wa.me text
+      // alone cannot carry files.
       let pdfBlob: Blob | null = null;
       try {
-        const res = await quotationsApi.downloadPdf(id);
-        const raw = res.data as Blob;
-        pdfBlob = raw instanceof Blob ? raw : new Blob([raw as any], { type: 'application/pdf' });
-        if (pdfBlob.type !== 'application/pdf') {
-          pdfBlob = new Blob([pdfBlob], { type: 'application/pdf' });
-        }
+        const full = await getQuotationForPdf(id);
+        const { quotationPdfBlob } = await import('@/lib/quotationPdf');
+        pdfBlob = quotationPdfBlob({ ...q, ...(full || {}) });
       } catch (e) {
-        console.warn('[quotation] PDF download failed, will send link only', e);
+        console.warn('[quotation] PDF generation failed, will send link only', e);
       }
 
       const baseMsg =
@@ -566,15 +576,14 @@ const Quotation: React.FC = () => {
         `For any queries, contact us at +91-79-12345678\n\nRegards,\nEurosol Prime`;
       const pdfUrl = `${getAbsoluteApiBaseUrl()}/quotations/${id}/download`;
 
-      // 1) Download PDF blob authenticated
+      // 1) Build the PDF client-side (branded template) for the email attachment
       let pdfBlob: Blob | null = null;
       try {
-        const res = await quotationsApi.downloadPdf(id);
-        const raw = res.data as Blob;
-        pdfBlob = raw instanceof Blob ? raw : new Blob([raw as any], { type: 'application/pdf' });
-        if (pdfBlob.type !== 'application/pdf') pdfBlob = new Blob([pdfBlob], { type: 'application/pdf' });
+        const full = await getQuotationForPdf(id);
+        const { quotationPdfBlob } = await import('@/lib/quotationPdf');
+        pdfBlob = quotationPdfBlob({ ...q, ...(full || {}) });
       } catch (e) {
-        console.warn('[quotation] PDF download failed, will send link only', e);
+        console.warn('[quotation] PDF generation failed, will send link only', e);
       }
 
       // 2) Try Web Share API with file (mobile) — attaches PDF directly
