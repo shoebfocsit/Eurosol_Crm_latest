@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Outlet, Navigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import Sidebar from './Sidebar';
@@ -8,6 +8,31 @@ import MobileNav from './MobileNav';
 const Layout: React.FC = () => {
   const { isAuthenticated, isLoading } = useAuth();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  // Bumped when the tab is brought back into focus so the current page keeps
+  // its route but refetches its data (same page, fresh data).
+  const [refreshKey, setRefreshKey] = useState(0);
+
+  useEffect(() => {
+    let hiddenAt = 0;
+    const onVisibilityChange = () => {
+      if (document.visibilityState === 'hidden') {
+        hiddenAt = Date.now();
+        return;
+      }
+      const awayFor = hiddenAt ? Date.now() - hiddenAt : 0;
+      hiddenAt = 0;
+      // Ignore quick tab flips (under 30s) to avoid needless refetches.
+      if (awayFor < 30000) return;
+      // Never yank data out from under an in-progress edit or open modal.
+      const el = document.activeElement as HTMLElement | null;
+      const tag = el?.tagName;
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || el?.isContentEditable) return;
+      if (document.querySelector('[role="dialog"]')) return;
+      setRefreshKey((k) => k + 1);
+    };
+    document.addEventListener('visibilitychange', onVisibilityChange);
+    return () => document.removeEventListener('visibilitychange', onVisibilityChange);
+  }, []);
 
   if (isLoading) {
     return (
@@ -32,7 +57,9 @@ const Layout: React.FC = () => {
         <Navbar toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} />
         
         <main className="p-3 md:p-6 lg:p-8 pb-20 lg:pb-8">
-          <Outlet />
+          <div key={refreshKey}>
+            <Outlet />
+          </div>
         </main>
       </div>
 

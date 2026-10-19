@@ -1,4 +1,4 @@
-import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
+import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { settingsApi } from '../services/api';
 import { useAuth } from './AuthContext';
 
@@ -35,7 +35,6 @@ export function resolveRegionIdOf(region: any): string {
 }
 
 export const RegionProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [regions, setRegions] = useState<any[]>([]);
   const [selectedRegion, setSelectedRegionState] = useState<string>(() => {
     try {
       return localStorage.getItem(STORAGE_KEY) || 'all';
@@ -44,31 +43,54 @@ export const RegionProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     }
   });
 
-  // /settings/regions backend par admin/settings-gated hai — bina permission
-  // request bheja hi nahi jayega (doomed 403 se console spam khatam).
-  let canReadRegions = false;
+  // Region list source. The full catalogue lives behind GET /settings/regions,
+  // which is ADMIN/settings-gated. Loading it for everyone caused BOTH failure
+  // modes: a manager WITH settings:read saw every region (even ones they were
+  // never assigned — over-access), while a manager WITHOUT settings:read got an
+  // empty list and could not see the regions that were assigned to them.
+  // Rule: admins/super-admins get the full list; everyone else gets ONLY the
+  // regions assigned to their account (user.regions from GET /auth/me).
+  let auth: ReturnType<typeof useAuth> | null = null;
   try {
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    const auth = useAuth();
-    const u = auth.user;
-    canReadRegions = !!(u?.role === 'ADMIN' || u?.role === 'SUPER_ADMIN' || u?.isSuperAdmin || auth.isSuperAdmin || auth.hasPermission('settings', 'read'));
+    auth = useAuth();
   } catch {
-    canReadRegions = false;
+    auth = null;
   }
+  const isAdminLike = !!(auth?.user?.role === 'ADMIN' || auth?.user?.role === 'SUPER_ADMIN' || auth?.user?.isSuperAdmin || auth?.isSuperAdmin);
+  const userRegions = auth?.user?.regions;
+
+  const assignedRegions = useMemo(
+    () =>
+      Array.isArray(userRegions)
+        ? userRegions
+            .filter(Boolean)
+            .map((r: any) => ({ ...r, id: r.id || r._id, name: r.name }))
+            .filter((r: any) => r.id)
+        : [],
+    [userRegions]
+  );
+
+  const [adminRegions, setAdminRegions] = useState<any[]>([]);
 
   useEffect(() => {
-    if (!canReadRegions) {
-      setRegions([]);
+    if (!isAdminLike) {
+      setAdminRegions([]);
       return;
     }
     settingsApi
       .getRegions()
       .then((r) => {
         const raw = r.data.data?.regions || r.data.data || [];
-        setRegions(Array.isArray(raw) ? raw : []);
+        setAdminRegions(Array.isArray(raw) ? raw : []);
       })
-      .catch(() => setRegions([]));
-  }, [canReadRegions]);
+      .catch(() => setAdminRegions([]));
+  }, [isAdminLike]);
+
+  const regions = useMemo(
+    () => (isAdminLike ? adminRegions : assignedRegions),
+    [isAdminLike, adminRegions, assignedRegions]
+  );
 
   const setSelectedRegion = useCallback((id: string) => {
     setSelectedRegionState(id);
@@ -76,6 +98,16 @@ export const RegionProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       localStorage.setItem(STORAGE_KEY, id);
     } catch {}
   }, []);
+
+  // A region picked by a previous (different) account is not valid for the
+  // current user — e.g. admin selects "Nagpur" then a manager assigned only
+  // "Indore" logs in on the same browser. Reset to "All Regions" instead of
+  // leaving the UI stuck on a region the user cannot see.
+  useEffect(() => {
+    if (selectedRegion === 'all' || regions.length === 0) return;
+    const exists = regions.some((r) => String(r.id || r._id) === String(selectedRegion));
+    if (!exists) setSelectedRegion('all');
+  }, [regions, selectedRegion, setSelectedRegion]);
 
   const resolveRegionId = useCallback((region: any) => resolveRegionIdOf(region), []);
 

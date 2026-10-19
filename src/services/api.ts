@@ -46,6 +46,13 @@ api.interceptors.request.use(
     } else if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
+    // CRM reads must always be fresh. The API answers with an ETag but no
+    // Cache-Control, so browsers may otherwise serve a heuristic-cached copy
+    // after a refresh. Force revalidation for every GET.
+    if ((config.method || 'get').toLowerCase() === 'get') {
+      config.headers['Cache-Control'] = 'no-cache';
+      config.headers['Pragma'] = 'no-cache';
+    }
     return config;
   },
   (error) => {
