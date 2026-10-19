@@ -74,7 +74,7 @@ export default function App() {
               <Route path="/payments" element={<PaymentRevenue />} />
               <Route path="/service" element={<AdminRoute module="service_requests"><ServiceManagement /></AdminRoute>} />
               <Route path="/employees" element={<AdminRoute module="employees"><EmployeeManagement /></AdminRoute>} />
-              <Route path="/regions" element={<AdminRoute module="settings"><RegionManagement /></AdminRoute>} />
+              <Route path="/regions" element={<AdminRoute module="regions"><RegionManagement /></AdminRoute>} />
               <Route path="/feedback" element={<AdminRoute module="feedback"><FeedbackManagement /></AdminRoute>} />
               <Route path="/blog" element={<BlogManagement />} />
               <Route path="/admin-panel" element={<AdminRoute module="website"><AdminPanel key={location.search} /></AdminRoute>} />

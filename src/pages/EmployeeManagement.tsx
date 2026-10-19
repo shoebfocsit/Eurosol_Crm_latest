@@ -26,7 +26,7 @@ const MODULES: PermissionModule[] = [
   'leads', 'inventory', 'quotations', 'surveys', 'installations',
   'payments', 'service_requests', 'employees', 'analytics', 'blog',
   'feedback', 'website', 'chat', 'settings', 'notifications',
-  'customers', 'documents', 'tasks',
+  'customers', 'documents', 'tasks', 'regions',
 ];
 
 // Modules removed from the product but still present in the backend role-default

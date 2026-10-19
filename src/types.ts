@@ -8,7 +8,7 @@ export type PermissionModule =
   | 'leads' | 'inventory' | 'quotations' | 'surveys' | 'installations' 
   | 'payments' | 'service_requests' | 'employees' | 'analytics' | 'blog' 
   | 'feedback' | 'website' | 'chat' | 'settings' | 'notifications'
-  | 'documents' | 'customers' | 'tasks';
+  | 'documents' | 'customers' | 'tasks' | 'regions';
 
 export interface Permission {
   module: PermissionModule;

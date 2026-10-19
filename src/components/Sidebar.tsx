@@ -86,7 +86,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
     { name: 'Payments & Revenue', icon: CreditCard, path: '/payments', show: canSee('payments'), canAdd: true, module: 'payments' },
     { name: 'Service & AMC', icon: Wrench, path: '/service', show: canSee('service_requests'), canAdd: true, module: 'service_requests' },
     { name: 'Employee Management', icon: ClipboardList, path: '/employees', show: canSee('employees'), canAdd: true, module: 'employees' },
-    { name: 'Regions', icon: MapPin, path: '/regions', show: isAdmin, canAdd: true, module: 'regions' },
+    { name: 'Regions', icon: MapPin, path: '/regions', show: canSee('regions'), canAdd: true, module: 'regions' },
     { name: 'Admin Panel', icon: Globe, path: '/admin-panel', show: isAdmin, canAdd: true, module: 'admin-panel', addPath: '/admin-panel?tab=projects&new=1' },
     { name: 'Feedback', icon: MessageSquare, path: '/feedback', show: canSee('feedback'), canAdd: true, module: 'feedback' },
     { name: 'Blog', icon: PenTool, path: '/blog', show: canSee('blog'), canAdd: true, module: 'blog' },
