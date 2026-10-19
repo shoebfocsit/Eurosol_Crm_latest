@@ -29,6 +29,10 @@ const MODULES: PermissionModule[] = [
   'customers', 'documents', 'tasks',
 ];
 
+// Modules removed from the product but still present in the backend role-default
+// template — hide them everywhere in the permission UI.
+const HIDDEN_MODULES = new Set<string>(['templates']);
+
 const ACTIONS = ['create', 'read', 'update', 'delete'] as const;
 const ACTION_LABELS = { create: 'Create', read: 'Read', update: 'Update', delete: 'Delete' };
 
@@ -128,7 +132,8 @@ const EmployeeManagement: React.FC = () => {
   const permModules = useMemo<PermissionModule[]>(() => {
     const seen = new Set<string>(MODULES as string[]);
     if (roleDefaults) Object.values(roleDefaults).flat().forEach((p: any) => { const m = String(p?.module || ''); if (m) seen.add(m); });
-    return [...MODULES, ...[...seen].filter((m) => !(MODULES as string[]).includes(m))] as PermissionModule[];
+    return ([...MODULES, ...[...seen].filter((m) => !(MODULES as string[]).includes(m))] as PermissionModule[])
+      .filter((m) => !HIDDEN_MODULES.has(m));
   }, [roleDefaults]);
 
   const withAllModules = (perms: Permission[]): Permission[] => {
@@ -151,7 +156,7 @@ const EmployeeManagement: React.FC = () => {
           <table className="w-full text-[11px]">
             <thead><tr className="bg-stone-50 border-b"><th className="text-left p-1.5 font-semibold">Module</th><th className="w-8">C</th><th className="w-8">R</th><th className="w-8">U</th><th className="w-8">D</th></tr></thead>
             <tbody>
-              {tpl.map((p) => (
+              {tpl.filter((p) => !HIDDEN_MODULES.has(String(p.module))).map((p) => (
                 <tr key={String(p.module)} className="border-b last:border-0">
                   <td className="p-1.5 font-medium capitalize">{String(p.module).replace(/_/g, ' ')}</td>
                   <td className="text-center">{on(p, 'canCreate')}</td>
@@ -1224,7 +1229,7 @@ const EmployeeManagement: React.FC = () => {
                 ) : (
                   <div className="flex flex-wrap gap-1">
                     {(() => {
-                      const perms: Permission[] = viewPermissions.length > 0 ? viewPermissions : [];
+                      const perms: Permission[] = (viewPermissions.length > 0 ? viewPermissions : []).filter(p => !HIDDEN_MODULES.has(String(p.module)));
                       return perms.filter(p => p.canRead).length > 0 ? perms.filter(p => p.canRead).map(p => (
                         <Badge key={p.module} variant="outline" className="text-[10px] bg-stone-50">
                           {p.module} {p.canCreate ? '(W)' : '(R)'}{p.canUpdate ? '' : ''}

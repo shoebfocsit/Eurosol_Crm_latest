@@ -371,16 +371,19 @@ describe('Phase 2 — Lead Lifecycle CRUD', () => {
     expect(firstCallArgs).toMatchObject({ page: 1, limit: 10 });
   });
 
-  it('2.5 — Search filters client-side without extra network call', async () => {
-    vi.mocked(leadsApi.getAll).mockResolvedValue({ data: { data: mockLeads(3), pagination: { page: 1, limit: 10, total: 3, totalPages: 1 } } } as any);
+  it('2.5 — Search is server-side and debounced: the term is sent to the API', async () => {
+    const spy = vi.mocked(leadsApi.getAll).mockResolvedValue({ data: { data: mockLeads(3), pagination: { page: 1, limit: 10, total: 3, totalPages: 1 } } } as any);
     await renderWithAuth(<LeadManagement />);
     await waitFor(() => expect(screen.getAllByText(/^Customer \d$/)).toHaveLength(3));
+    spy.mockClear();
     const search = screen.getByPlaceholderText('Search by name, ID or phone...');
     fireEvent.change(search, { target: { value: 'Customer 1' } });
-    await waitFor(() => expect(screen.getAllByText(/^Customer \d$/).length).toBeLessThan(3));
-    // clearing restores
-    fireEvent.change(search, { target: { value: '' } });
-    await waitFor(() => expect(screen.getAllByText(/^Customer \d$/)).toHaveLength(3));
+    // 500ms debounce → the fetch must carry the search term (server-side filtering,
+    // so leads on page 2-3 are searchable too — never a client-side filter).
+    await waitFor(
+      () => expect(spy).toHaveBeenCalledWith(expect.objectContaining({ search: 'Customer 1' })),
+      { timeout: 3000 }
+    );
   });
 
   it('2.6 — Status filter triggers refetch with status query param', async () => {
