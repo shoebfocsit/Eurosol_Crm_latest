@@ -88,7 +88,7 @@ const LeadManagement: React.FC = () => {
     const t = setTimeout(() => setDebouncedSearch(searchTerm.trim()), 500);
     return () => clearTimeout(t);
   }, [searchTerm]);
-  const [statusFilter, setStatusFilter] = useState<string>('NEW');
+  const [statusFilter, setStatusFilter] = useState<string>('all');
   const [assignedToMe, setAssignedToMe] = useState(false);
   const { regions: allRegions, selectedRegion, setSelectedRegion } = useRegion();
   const [pagination, setPagination] = useState({ page: 1, limit: 10, total: 0, pages: 1 });
